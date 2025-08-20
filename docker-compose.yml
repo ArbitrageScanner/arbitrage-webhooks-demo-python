@@ -1,11 +1,11 @@
 version: "3.9"
 
 services:
-  myapp:
+  webhooks_acceptor:
     build: .
-    container_name: myapp_container
+    container_name: webhooks_acceptor
     env_file:
-      - variables.env
+      - .env
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     volumes:

@@ -4,28 +4,28 @@ from pygments.lexer import default
 
 class Headers(BaseModel):
     host: str
-    user_agent: str = Field(alias="user-agent")
-    content_encoding: str = Field(alias="content-encoding")
-    content_type: str = Field(alias="content-type")
+    user_agent: str = Field(alias='user-agent')
+    content_encoding: str = Field(alias='content-encoding')
+    content_type: str = Field(alias='content-type')
     traceparent: str
-    hook_token: str = Field(alias="x-hook-token")
-    spread_batch_id: str = Field(alias="x-spread-batch-id")
-    accept_encoding: str = Field(alias="accept-encoding")
+    hook_token: str = Field(alias='x-hooktoken')
+    spread_batch_id: str = Field(alias='x-spreadbatchid')
+    accept_encoding: str = Field(alias='accept-encoding')
 
     model_config = ConfigDict(
-        extra="ignore",
-        populate_by_name=True
+        extra='ignore',
+        #populate_by_name=True
     )
 
 class Chain(BaseModel):
     chain: str
-    deposit_enabled: bool = Field(alias='deposit_enabled')
-    withdraw_enabled: bool = Field(alias='withdraw_enabled')
+    deposit_enabled: bool = Field(alias='depositEnabled')
+    withdraw_enabled: bool = Field(alias='withdrawEnabled')
     withdraw_fee: float = Field(alias='withdrawFee')
-    min_confirm: int = Field(alias="minConfirm")
+    min_confirm: int = Field(alias='minConfirm')
 
     model_config = ConfigDict(
-        extra="ignore",
+        extra='ignore',
         populate_by_name=True
     )
 
@@ -59,7 +59,7 @@ class Spread(BaseModel):
     is_futures: bool = Field(alias='isFutures')
 
     model_config = ConfigDict(
-        extra="ignore",
+        extra='ignore',
         populate_by_name=True
     )
 
@@ -74,6 +74,6 @@ class HookRecord(BaseModel):
     error: str | None = Field(default=None)
 
     model_config = ConfigDict(
-        extra="ignore",
+        extra='ignore',
         populate_by_name=True
     )
