@@ -49,7 +49,7 @@ logger.addHandler(console_handler)
 
 for uvicorn_logger_name in ("uvicorn", "uvicorn.access", "uvicorn.error"):
     uv_logger = logging.getLogger(uvicorn_logger_name)
-    uv_logger.handlers = []  # убираем дефолтные обработчики
+    uv_logger.handlers = []
     uv_logger.addHandler(file_handler)
     uv_logger.addHandler(console_handler)
     uv_logger.setLevel(logging.INFO)
@@ -76,8 +76,6 @@ class HooksAcceptor:
         receive_date_str = datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
 
         body = await request.body()
-
-        headers_dict = {key: request.headers[key] for key in request.headers}
 
         error = None
         success = True

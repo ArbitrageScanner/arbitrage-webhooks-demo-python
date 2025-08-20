@@ -1,4 +1,4 @@
-# Public webhook accepter server
+# Public webhook acceptor server
 
 ## Before start
 
@@ -27,7 +27,7 @@ e.g. cloning repo from ~/ or root/ wiil lead to creation of ~/public_webhooks_se
     >`No commands here yet`
 
 
-After perfroming docker compose command the container should already be up and running.
+After performing docker compose command the container should already be up and running.
 
 You can check that by typing: 
 
