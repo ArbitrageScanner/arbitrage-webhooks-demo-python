@@ -17,12 +17,13 @@ import uvicorn as uvicorn
 from models import HookRecord, Spread, Headers
 
 SERVER_IP = os.getenv('SERVER_IP')
-SERVER_PORT = os.getenv('SERVER_PORT', 8181)
+SERVER_PORT = os.getenv('SERVER_PORT', 8000)
+LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
 
 os.makedirs("logs", exist_ok=True)
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel('INFO')
 
 formatter = logging.Formatter(
     "%(asctime)s | %(levelname)s | %(name)s | %(message)s",
@@ -95,7 +96,9 @@ class HooksAcceptor:
             error = str(err)
             success = False
 
-            logger.error(f'An error occured: {err}.')
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+            logger.error(f'An error occurred: {err.__name__}: {err}.')
 
         finally:
             response_body = {

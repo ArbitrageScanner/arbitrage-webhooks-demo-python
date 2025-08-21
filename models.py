@@ -22,7 +22,7 @@ class Chain(BaseModel):
     deposit_enabled: bool = Field(alias='depositEnabled')
     withdraw_enabled: bool = Field(alias='withdrawEnabled')
     withdraw_fee: float = Field(alias='withdrawFee')
-    min_confirm: int = Field(alias='minConfirm')
+    min_confirm: int | None = Field(alias='minConfirm', default=None)
 
     model_config = ConfigDict(
         extra='ignore',
@@ -70,7 +70,7 @@ class HookRecord(BaseModel):
     headers: Headers
     received_body: list[Spread]
     response_date: float | None = Field(default=None)
-    response_body: dict
+    response_body: dict | None = Field(default=None)
     error: str | None = Field(default=None)
 
     model_config = ConfigDict(
