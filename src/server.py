@@ -14,13 +14,13 @@ from fastapi.responses import JSONResponse
 
 import uvicorn as uvicorn
 
-from models import HookRecord, Spread, Headers
+from src.models import HookRecord, Spread, Headers
 
 SERVER_IP = os.getenv('SERVER_IP')
 SERVER_PORT = os.getenv('SERVER_PORT', 8000)
 LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
 
-os.makedirs("logs", exist_ok=True)
+os.makedirs("../logs", exist_ok=True)
 
 logger = logging.getLogger()
 logger.setLevel('INFO')
@@ -30,10 +30,9 @@ formatter = logging.Formatter(
     datefmt="%Y-%m-%d %H:%M:%S %Z"
 )
 
-
 # This handler will save app logs directly in file in project folder
 file_handler = TimedRotatingFileHandler(
-    "logs/app.log",
+    "../logs/app.log",
     when="D",
     interval=1,
     backupCount=7,
@@ -174,4 +173,4 @@ router.get("/stats/{hook_token}")(handler.stats)
 app.include_router(router)
 
 if __name__ == '__main__':
-    uvicorn.run("server:app", host=SERVER_IP, port=SERVER_PORT, reload=False)
+    uvicorn.run("server:app", host=SERVER_IP, port=int(SERVER_PORT), reload=False)
