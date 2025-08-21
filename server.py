@@ -98,7 +98,7 @@ class HooksAcceptor:
 
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
-            logger.error(f'An error occurred: {err.__name__}: {err}.')
+            logger.error(f'An error occurred: {err}.')
 
         finally:
             response_body = {
