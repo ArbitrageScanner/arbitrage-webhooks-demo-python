@@ -1,5 +1,4 @@
 from pydantic import BaseModel, ConfigDict, Field
-from pygments.lexer import default
 
 
 class Headers(BaseModel):
@@ -14,7 +13,8 @@ class Headers(BaseModel):
 
     model_config = ConfigDict(
         extra='ignore',
-        #populate_by_name=True
+        validate_by_alias=True,
+        validate_by_name=True
     )
 
 class Chain(BaseModel):
@@ -26,7 +26,8 @@ class Chain(BaseModel):
 
     model_config = ConfigDict(
         extra='ignore',
-        populate_by_name=True
+        validate_by_alias=True,
+        validate_by_name=True
     )
 
 class Spread(BaseModel):
@@ -60,7 +61,8 @@ class Spread(BaseModel):
 
     model_config = ConfigDict(
         extra='ignore',
-        populate_by_name=True
+        validate_by_alias=True,
+        validate_by_name=True
     )
 
 class HookRecord(BaseModel):
@@ -75,5 +77,6 @@ class HookRecord(BaseModel):
 
     model_config = ConfigDict(
         extra='ignore',
-        populate_by_name=True
+        validate_by_alias=True,
+        validate_by_name=True
     )
