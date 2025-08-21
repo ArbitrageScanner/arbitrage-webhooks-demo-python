@@ -85,6 +85,7 @@ class HooksAcceptor:
 
             decoded_body = await self.unpack_gzip(raw_body=body)
             received_body = [Spread(**spread) for spread in decoded_body.get('data', [])]
+            headers = Headers(**request.headers)
             response_date = time.time()
 
             logger.info('Successfully decoded json.')
@@ -93,6 +94,7 @@ class HooksAcceptor:
 
             response_date = None
             received_body = []
+            headers = None
             error = str(err)
             success = False
 
@@ -117,7 +119,7 @@ class HooksAcceptor:
                 receive_date=receive_date,
                 receive_date_str=receive_date_str,
                 received_body=received_body,
-                headers=Headers(**request.headers),
+                headers=headers,
                 response_date=response_date,
                 response_body=response_body,
                 error=error
