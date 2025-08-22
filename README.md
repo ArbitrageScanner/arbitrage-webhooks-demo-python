@@ -99,7 +99,7 @@ Use following environment variables in `.env` file for configuration:
 ## 📩 Example Request
 
 ```bash
-curl -X POST http://188.245.178.81:8183/hook \
+curl -X POST http://<server_ip>:<server_port>/hook \
   -H "Content-Type: application/json" \
   -H "Content-Encoding: gzip" \
   -H "x-hooktoken: test_hook_token" \
