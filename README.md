@@ -91,7 +91,7 @@ Use following environment variables in `.env` file for configuration:
 | Variable       | Description                     | Default | Comment                                                                                    |
 |----------------|---------------------------------|---------|--------------------------------------------------------------------------------------------|
 | `SERVER_IP`     | Server ip                       | `0.0.0.0` | Do not change if using docker. Otherwise - 0.0.0.0 will be only accessible from localhost. |
-| `PORT`         | Server port                     | `8000`  | Use values >8000                                                                           |
+| `PORT`         | Server port                     | `8000`  | Use values >= 8000                                                                         |
 | `LOGGING_LEVEL` | Logging level (`INFO`, `DEBUG`) | `INFO`  | Prefer to use 'INFO', case sensitive                                                       |
 
 ---
