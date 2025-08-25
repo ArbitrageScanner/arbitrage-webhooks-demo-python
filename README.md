@@ -14,6 +14,30 @@ This repository helps developers quickly understand how to integrate webhooks an
 
 ---
 
+## 🔖 Before start
+
+### 1. Fork repository
+Click the **Fork** button at the top-right corner of this page to create your own copy of the repository.
+
+### 1. Determine installation method
+You can install and run this repository either manually, using [Quick start](#-quick-start) section, ot as a Docker container, using [Run with docker](#-run-with-docker) section.
+If you are not confident in your abilities - use [Quick start](#-quick-start) section
+
+
+### ⚠️ IMPORTANT
+Ensure your server or local PC has static IP-address, otherwise webhooks would not be able to reach your app.
+
+### 2. Establish your .env file
+Create a file named `.env` and copy contents from [.env.example](.env.example) into `.env`
+
+### 2. Customize config data
+If you have decided to stick to [Quick start](#-quick-start):
+1. Find your IP-address. For example - copy your IP-address from `IPv4` section on this [page](https://whatismyipaddress.com/)
+2. Replace `SERVER_IP` variable value in newly created `.env` to copied value
+3. If your port `8000` is occupied - chose other port between `8000` and `9000` and replace `SERVER_PORT` value with this. Otherwise - do not change nothing.
+
+If you have decided to use [Run with docker](#-run-with-docker) section - do not change anything in .env
+
 ## ⚡ Quick Start
 
 ### 1. Install python (You can skip that part if already installed version >=3.12)
@@ -46,7 +70,7 @@ pip install -r requirements.txt
 ### 5. Set environmental variables reading from file
 ```bash
 set -a
-source .env
+source .env.example
 set +a
 ```
 
@@ -58,14 +82,15 @@ python server.py
 By default, the server is available at:  
 👉 `http://localhost:8000`
 
-### 7. Update project
-1. Pull repository
-    ```bash
-    cd <repo-name>
-    git pull
-    ```
-2. Repeat steps 3-6
-
+### 7. Test your server
+Send POST-request using this [collection](postman link)
+1. Open collection
+2. Select `<endpoint name>`
+3. Replace `<server_host>` by your values using following format: `<SERVER_IP>:<SERVER_PORT>`
+4. Press `Send`
+5. Open `<SERVER_IP>:<SERVER_PORT>/stats` in your browser
+6. If request payload is parsed successfully - it will be shown in `/stats` meaning everything works fine.
+7. If not - read logs in `/app` folder
 ---
 
 ## 🐳 Run with Docker
@@ -86,79 +111,15 @@ docker logs webhooks_acceptor -f
 
 ## 🛠 Configuration
 
-Use following environment variables in `.env` file for configuration:
+Use following environment variables in [](.env.example) file for configuration:
 
-| Variable       | Description                     | Default | Comment                                                                                    |
-|----------------|---------------------------------|---------|--------------------------------------------------------------------------------------------|
-| `SERVER_IP`     | Server ip                       | `0.0.0.0` | Do not change if using docker. Otherwise - 0.0.0.0 will be only accessible from localhost. |
-| `PORT`         | Server port                     | `8000`  | Use values >= 8000                                                                         |
-| `LOGGING_LEVEL` | Logging level (`INFO`, `DEBUG`) | `INFO`  | Prefer to use 'INFO', case sensitive                                                       |
+| Variable       | Description                     | Default | Comment                        |
+|----------------|---------------------------------|---------|--------------------------------|
+| `SERVER_IP`     | Server ip                       | `0.0.0.0` | Do not change if using Docker. |
+| `PORT`         | Server port                     | `8000`  | Use values >= 8000             |
+| `LOGGING_LEVEL` | Logging level (`INFO`, `DEBUG`) | `INFO`  | Prefer to use 'INFO', case sensitive |
 
 ---
-
-## 📩 Example Request
-
-```bash
-curl -X POST http://<server_ip>:<server_port>/hook \
-  -H "Content-Type: application/json" \
-  -H "Content-Encoding: gzip" \
-  -H "x-hooktoken: test_hook_token" \
-  -H "x-spreadbatchid: test_spead_batch_id" \
-  -H "traceparent: 123" \
-  -H "accept-encoding: gzip" \
-  --data-binary @<(gzip -c <<'EOF'
-{
-    "ts": "1755778853375",
-    "data": [
-        {
-            "profitIndexMax": 44.50681635926222,
-            "profitIndexMin": 41.436818473380384,
-            "profitIndexAvg": 42.823781352434395,
-            "volume": 7841.103999999999,
-            "buyPriceMin": 0.06235,
-            "buyPriceMax": 0.06236,
-            "buyPriceAvg": 0.062355249100126714,
-            "sellPriceMin": 0.0882,
-            "sellPriceMax": 0.0901,
-            "sellPriceAvg": 0.08905812463653079,
-            "exchangeBuy": "phemex",
-            "exchangeSell": "huobi",
-            "symbol": "ZKUSDT",
-            "buyExchangeFundingProfitModifier": 0,
-            "sellExchangeFundingProfitModifier": 0,
-            "buyExchangeNextFundingTime": 0,
-            "sellExchangeNextFundingTime": 0,
-            "overallProfitIndexMax": 44.50681635926222,
-            "overallProfitIndexMin": 41.436818473380384,
-            "overallProfitIndexAvg": 42.823781352434395,
-            "originalSymbol": "ZK-USDT|ZK-USDT",
-            "volumeUsd": 593.62400523,
-            "lifetime": 535105,
-            "chainsBuy": [
-                {
-                    "chain": "zkeraeth",
-                    "depositEnabled": true,
-                    "withdrawEnabled": true,
-                    "withdrawFee": 0.15264845
-                }
-            ],
-            "chainsSell": [
-                {
-                    "chain": "zksync_era",
-                    "depositEnabled": false,
-                    "withdrawEnabled": false,
-                    "withdrawFee": 1.2,
-                    "minConfirm": 20
-                }
-            ],
-            "updated": 0,
-            "isFutures": false
-        }
-    ]
-}
-EOF
-)
-```
 
 ---
 
@@ -195,4 +156,4 @@ See [LICENSE](./LICENSE) for details.
 - [What is a webhook and how to use it?](https://www.geeksforgeeks.org/blogs/what-is-a-webhook-and-how-to-use-it/)
 - [What is Docker?](https://docs.docker.com/get-started/docker-overview/)
 - [Our Website](https://arbitragescanner.io/)  
-- [Support](mailto:support@your-company.com)  
+- [Support](https://t.me/arbitrage_scanner_support_bot)  
