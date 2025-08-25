@@ -40,7 +40,7 @@ If you have decided to use [Run with docker](#-run-with-docker) section - do not
 
 ## ⚡ Quick Start
 
-### 1. Install python (You can skip that part if already installed version >=3.12)
+### 1. Install Python (You can skip that part if you already have an installed Python instance with version >=3.12)
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-venv python3-pip
