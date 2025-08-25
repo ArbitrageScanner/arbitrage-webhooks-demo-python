@@ -25,7 +25,7 @@ If you are not confident in your abilities - use [Quick start](#-quick-start) se
 
 
 ### ⚠️ IMPORTANT
-Ensure your server or local PC has static IP-address, otherwise webhooks would not be able to reach your app.
+Ensure your server or local PC has static IP-address, otherwise webhook requests would not be able to reach your app.
 
 ### 2. Establish your .env file
 Create a file named `.env` and copy contents from [.env.example](.env.example) into `.env`
