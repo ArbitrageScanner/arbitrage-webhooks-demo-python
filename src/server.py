@@ -71,13 +71,35 @@ class HooksAcceptor:
 
     First two ways can be realized using following code:
 
+    app = FastAPI()
+    router = APIRouter()
+
     router = ApiRouter() # a router instance
 
     class SomeClass:
-        async def some_method(self):
+        async def some_method(self, param: str = None):
+            pass
 
+    handler = SomeClass()
+
+    router.post("/some_endpoint")(handler.some_method)
+    router.get("/some_endpoint/some_param")(handler.some_method)
+
+    app.include_router(router)
+
+    Third way can be realized a bit differently:
+
+    app = FastAPI()
+    router = APIRouter()
+
+    @router.get("/some_endpoint", tags=["some_tag"])
+    async def some_method():
+        return [{"username": "Rick"}, {"username": "Morty"}]
+
+    app.include_router(router)
 
     """
+
     def __init__(
             self,
             cache_width: int = 10
