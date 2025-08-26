@@ -3,8 +3,10 @@ import datetime
 import logging
 import os
 import time
+from collections import defaultdict, deque
 
 from logging.handlers import TimedRotatingFileHandler
+from typing import DefaultDict, Deque
 
 from fastapi import FastAPI, Request, status, APIRouter
 from fastapi.responses import JSONResponse
@@ -56,17 +58,49 @@ app = FastAPI()
 router = APIRouter()
 
 class HooksAcceptor:
-    def __init__(self):
-        self.hooks: dict[str, list[HookRecord]] = {}
+    """
+    Class representing hooks requests receiving and management.
+    Consists of accept_hook, which will process incoming POST-requests and process it, and stats method, which returns saved spread batches, depending on whether hook_token is passed or not.
+
+    You can also add your own methods in this class directly, just don't forget to add them to router.
+
+    You can also add your own endpoints in three ways:
+    1.) add new class methods directly in this class
+    2.) create your own class
+    3.) create static functions
+
+    First two ways can be realized using following code:
+
+    router = ApiRouter() # a router instance
+
+    class SomeClass:
+        async def some_method(self):
+
+
+    """
+    def __init__(
+            self,
+            cache_width: int = 10
+    ):
+        self.hooks: DefaultDict[str, Deque[HookRecord]] = defaultdict(lambda: deque(maxlen=cache_width))
         self.lock = asyncio.Lock()
 
-    async def unpack_gzip(self, raw_body: bytes) -> dict | list:
-        with gzip.GzipFile(fileobj=BytesIO(raw_body)) as f:
-            decompressed_data = f.read()
-            decoded_json = json.loads(decompressed_data)
-        return decoded_json
+    async def accept_hook(
+            self,
+            request: Request,
+            status_code: int = status.HTTP_200_OK
+    ) -> JSONResponse:
+        """
+        Tries to decompress gzip-packed json-serialized data, create a pydantic model out of it, saves it to cache and return a json-response.
+        By default, saves in cache only last 10 hooks.
 
-    async def accept_hook(self, request: Request, status_code=status.HTTP_200_OK) -> JSONResponse:
+        :param request: received request
+        :type request: fastapi.Request
+        :param status_code: status code to return, defaults to 200
+        :type status_code: int
+        :return: JsonResponse object
+        :rtype: fastapi.responses.JSONResponse
+        """
 
         logger.info('Received hook')
 
@@ -109,9 +143,6 @@ class HooksAcceptor:
 
         hook_token = request.headers.get('x-hooktoken')
 
-        if not self.hooks.get(hook_token):
-            self.hooks[hook_token] = []
-
         self.hooks[hook_token].append(
             HookRecord(
                 hook_token=hook_token,
@@ -125,14 +156,11 @@ class HooksAcceptor:
             )
         )
 
-        logger.info('Saved spreads from hook in RAM. Access via /stats.')
+        logger.info(f'Saved spreads from hook with hook_token {hook_token} in RAM. Access via /stats.')
 
-        # For the sake of saving your RAM - we will save only last 10 hooks.
-        # If you want to keep all hooks, that are received by server - just delete next two lines.
-        async with self.lock:
-            self.hooks[hook_token] = self.hooks[hook_token][-10:]
 
         logger.info('Returning response to hook sender.')
+
         return JSONResponse(
             status_code=status_code,
             headers={},
@@ -140,7 +168,20 @@ class HooksAcceptor:
         )
 
     async def stats(self, request: Request, status_code=status.HTTP_200_OK, hook_token: str = None) -> JSONResponse:
+        """
+        Returns a JsonResponse, containing received data from a webhooks, depending on passing hook_token value.
+        If hook_token is passed - tries to find in cache and return all records with passed hook_token.
+        Otherwise - returns everything currently stored in cache.
 
+        :param request: received request
+        :type request: fastapi.Request
+        :param status_code: status code to return, defaults to 200
+        :type status_code: int
+        :param hook_token: a unique hook identifier, can be found either in received request headers (which is also included in response from this method) or in hooks list from GET-method or web-interface, defaults to None
+        :type hook_token: str
+        :return: JsonResponse object, containing all found data
+        :rtype: fastapi.responses.JSONResponse
+        """
         response_body = {
             "result_status": "success",
             "data": {}
@@ -148,7 +189,9 @@ class HooksAcceptor:
 
         # If hook_token is specified - only that hook spread batches will be shown in response
         if hook_token:
-            response_body['data'][hook_token] = [record.model_dump() for record in self.hooks.get(hook_token, [])]
+            response_body['data'][hook_token] = [
+                record.model_dump() for record in self.hooks.get(hook_token, [])
+            ]
 
             logger.info(f'Preparing stats response for a single hook for ip {request.client.host}.')
 
@@ -161,7 +204,9 @@ class HooksAcceptor:
 
 
         return JSONResponse(
-            status_code=status_code, headers={}, content=response_body
+            status_code=status_code,
+            headers={},
+            content=response_body
         )
 
 
