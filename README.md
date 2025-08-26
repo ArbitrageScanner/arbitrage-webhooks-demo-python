@@ -90,7 +90,7 @@ Send POST-request using this [Postman collection request](https://www.postman.co
 5. Press `Send`
 6. Open `<SERVER_IP>:<SERVER_PORT>/stats/test_hook_token` in your browser
 7. If request payload is parsed successfully - it will be shown in `/stats/test_hook_token` meaning everything works fine.
-8. If not - read logs in `/app` folder
+If not - read logs in `/app` folder
 ---
 
 ## 🐳 Run with Docker
