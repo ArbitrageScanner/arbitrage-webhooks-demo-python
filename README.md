@@ -23,9 +23,8 @@ Click the **Fork** button at the top-right corner of this page to create your ow
 You can install and run this repository either manually, using [Quick start](#-quick-start) section, ot as a Docker container, using [Run with docker](#-run-with-docker) section.
 If you are not confident in your abilities - use [Quick start](#-quick-start) section
 
-
 ### ⚠️ IMPORTANT
-Ensure your server or local PC has static IP-address, otherwise webhook requests would not be able to reach your app.
+Ensure your server or local PC has static IP-address. If you have a dynamic IP-address - somewhere in close future your server would stop receiving requests from a webhook due to a `SERVER_IP` change
 
 ### 2. Establish your .env file
 Create a file named `.env` and copy contents from [.env.example](.env.example) into `.env`
@@ -40,7 +39,7 @@ If you have decided to use [Run with docker](#-run-with-docker) section - do not
 
 ## ⚡ Quick Start
 
-### 1. Install Python (You can skip that part if you already have an installed Python instance with version >=3.12)
+### 1. Install Python (Python 3.12 and above is recommended)
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-venv python3-pip
@@ -52,29 +51,29 @@ git clone https://github.com/<your-org>/<repo-name>.git
 cd <repo-name>
 ```
 
-### 2. Create virtual environment
+### 3. Create virtual environment
 ```bash
 python3 -m venv .venv
 ```
 
-### 3. Activate virtual environment
+### 5. Activate virtual environment
 ```bash
 source .venv/bin/activate
 ```
 
-### 4. Install dependencies
+### 6. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Set environmental variables reading from file
+### 6. Set environmental variables reading from file
 ```bash
 set -a
-source .env.example
+source .env
 set +a
 ```
 
-### 6. Start the server
+### 7. Start the server
 ```bash
 python server.py
 ```
