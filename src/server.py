@@ -189,7 +189,11 @@ class HooksAcceptor:
             content=response_body
         )
 
-    async def stats(self, request: Request, status_code=status.HTTP_200_OK, hook_token: str = None) -> JSONResponse:
+    async def stats(
+            self,
+            request: Request,
+            status_code=status.HTTP_200_OK, hook_token: str = None
+    ) -> JSONResponse:
         """
         Returns a JsonResponse, containing received data from a webhooks, depending on passing hook_token value.
         If hook_token is passed - tries to find in cache and return all records with passed hook_token.
