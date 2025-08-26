@@ -82,14 +82,15 @@ By default, the server is available at:
 👉 `http://localhost:8000`
 
 ### 7. Test your server
-Send POST-request using this [collection](postman link)
-1. Open collection
-2. Select `<endpoint name>`
-3. Replace `<server_host>` by your values using following format: `<SERVER_IP>:<SERVER_PORT>`
-4. Press `Send`
-5. Open `<SERVER_IP>:<SERVER_PORT>/stats` in your browser
-6. If request payload is parsed successfully - it will be shown in `/stats` meaning everything works fine.
-7. If not - read logs in `/app` folder
+Send POST-request using this [Postman collection request](https://www.postman.com/arbscanner/workspace/arbscanner-b2b-api/request/23775304-894ae89e-a7f4-42c6-a3d1-144f5eadee68?action=share&source=copy-link&creator=23775304)
+1. Open [request](https://www.postman.com/arbscanner/workspace/arbscanner-b2b-api/request/23775304-894ae89e-a7f4-42c6-a3d1-144f5eadee68?action=share&source=copy-link&creator=23775304)
+2. Replace `ip_address` with your server IP-address
+3. Replace `port` with your `SERVER_PORT` value from .env 
+4. Replace `path` with desired endpoint path (defaults to `/hook`)
+5. Press `Send`
+6. Open `<SERVER_IP>:<SERVER_PORT>/stats/test_hook_token` in your browser
+7. If request payload is parsed successfully - it will be shown in `/stats/test_hook_token` meaning everything works fine.
+8. If not - read logs in `/app` folder
 ---
 
 ## 🐳 Run with Docker
