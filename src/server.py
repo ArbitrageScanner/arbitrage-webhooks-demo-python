@@ -1,12 +1,9 @@
 import asyncio
 import datetime
-import gzip
-import json
 import logging
 import os
 import time
 
-from io import BytesIO
 from logging.handlers import TimedRotatingFileHandler
 
 from fastapi import FastAPI, Request, status, APIRouter
@@ -15,6 +12,7 @@ from fastapi.responses import JSONResponse
 import uvicorn as uvicorn
 
 from src.models import HookRecord, Spread, Headers
+from src.utils import unpack_gzip
 
 SERVER_IP = os.getenv('SERVER_IP')
 SERVER_PORT = os.getenv('SERVER_PORT', 8000)
@@ -82,8 +80,10 @@ class HooksAcceptor:
 
         try:
 
-            decoded_body = await self.unpack_gzip(raw_body=body)
-            received_body = [Spread(**spread) for spread in decoded_body.get('data', [])]
+            decoded_body = await unpack_gzip(raw_body=body)
+            received_body = [
+                Spread(**spread) for spread in decoded_body.get('data', [])
+            ]
             headers = Headers(**request.headers)
             response_date = time.time()
 
