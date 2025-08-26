@@ -198,7 +198,15 @@ class HooksAcceptor:
         # Otherwise - all hooks currently in RAM will be shown
         else:
             for hook in self.hooks:
-                response_body['data'][hook] = [record.model_dump() for record in self.hooks.get(hook, [])]
+                response_body['data'][hook] = [
+                    record.model_dump() for record in self.hooks.get(hook, [])
+                ]
+
+            response_body['data'] = {
+                hook:[
+                    record.model_dump() for record in self.hooks.get(hook, [])
+                ] for hook in self.hooks
+            }
 
             logger.info(f'Preparing stats response for all hooks for ip {request.client.host}.')
 
