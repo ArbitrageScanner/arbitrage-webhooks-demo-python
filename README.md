@@ -1,4 +1,4 @@
-# 🚀 Demo Webhook Server for `Arbitragescanner arbitrage-hooks API`
+# 🚀 Demo Webhook Server for Arbitragescanner arbitrage-hooks API
 
 Welcome to the official demo server for processing **webhook messages** from **Arbitragescanner arbitrage-hooks API**.  
 This repository helps developers quickly understand how to integrate webhooks and handle events in their applications.
