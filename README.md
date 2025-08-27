@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="TopHeader.png#gh-light-mode-only" alt="Logo" width="300"/>
+  <img src="TopHeaderWhite.png#gh-dark-mode-only" alt="Logo" width="300"/>
+</p>
+
 # 🚀 Demo Webhook Server for Arbitragescanner arbitrage-hooks API
 
 Welcome to the official demo server for processing **webhook messages** from **Arbitragescanner arbitrage-hooks API**.  
