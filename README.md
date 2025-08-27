@@ -1,6 +1,6 @@
 <p align="center">
   <img src="labels/TopHeaderWhiteTheme.png#gh-light-mode-only" alt="Logo" width="300"/>
-  <img src="abels/TopHeaderDarkTheme.png#gh-dark-mode-only" alt="Logo" width="300"/>
+  <img src="labels/TopHeaderDarkTheme.png#gh-dark-mode-only" alt="Logo" width="300"/>
 </p>
 
 # 🚀 Demo Webhook Server for Arbitragescanner arbitrage-hooks API
