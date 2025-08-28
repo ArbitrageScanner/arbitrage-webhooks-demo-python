@@ -1,0 +1,12 @@
+pages:
+  stage: deploy
+  script:
+    - pip install sphinx sphinx_rtd_theme sphinx-autodoc-typehints
+    - cd docs
+    - make html
+    - cp -r build/html public  # GitLab Pages использует папку public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main  # или любая ветка, с которой хочешь деплоить
