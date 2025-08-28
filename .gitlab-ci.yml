@@ -13,7 +13,7 @@ build_docs:
     - python3 -m ensurepip --default-pip
     - python3 -m pip install --upgrade pip
     - python3 -m pip install sphinx sphinx_rtd_theme sphinx-autodoc-typehints
-
+    - export PATH="$HOME/.local/bin:$PATH"
     - cd docs
 
     - make html
