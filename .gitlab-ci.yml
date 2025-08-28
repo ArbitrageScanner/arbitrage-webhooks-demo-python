@@ -1,14 +1,36 @@
-pages:
-  stage: deploy
+stages:
+  - build
+  - pages
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+build_docs:
+  stage: build
   tags:
-    - documentation_builder
+    - pages_builder
   script:
-    - pip install sphinx sphinx_rtd_theme sphinx-autodoc-typehints
+    - python3 -m ensurepip --default-pip
+    - python3 -m pip install --upgrade pip
+    - python3 -m pip install sphinx sphinx_rtd_theme sphinx-autodoc-typehints
+
     - cd docs
+
     - make html
-    - cp -r build/html public  # GitLab Pages использует папку public
+
+    - cd ..
+
+    - Remove-Item -Recurse -Force .\public\* 
+    - Copy-Item -Recurse -Force .\docs\build\html\* .\public
+
+pages:
+  stage: pages
+  tags:
+    - pages_builder
+  script:
+    - echo "Deploying Pages..."
   artifacts:
     paths:
       - public
   only:
-    - main  # или любая ветка, с которой хочешь деплоить
+    - main
