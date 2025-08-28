@@ -1,36 +1,21 @@
 stages:
-  - build
-  - pages
-
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  - docs
 
 build_docs:
-  stage: build
-  tags:
-    - pages_builder
+  stage: docs
+  image: python:3.12
   script:
     - python3 -m ensurepip --default-pip
-    - python3 -m pip install --upgrade pip
-    - python3 -m pip install sphinx sphinx_rtd_theme sphinx-autodoc-typehints
-    - export PATH="$HOME/.local/bin:$PATH"
+    - python3 -m pip install --upgrade pip --user
+    - python3 -m pip install --user fastapi pydantic sphinx sphinx_rtd_theme sphinx-autodoc-typehints
     - cd docs
-
     - make html
-
     - cd ..
-
-    - Remove-Item -Recurse -Force .\public\* 
-    - Copy-Item -Recurse -Force .\docs\build\html\* .\public
-
-pages:
-  stage: pages
-  tags:
-    - pages_builder
-  script:
-    - echo "Deploying Pages..."
+    - rm -rf public/*
+    - cp -r docs/build/html public/
   artifacts:
     paths:
       - public
+    expire_in: 1 week
   only:
     - main
