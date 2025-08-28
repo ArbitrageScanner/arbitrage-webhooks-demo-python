@@ -1,3 +1,50 @@
+"""
+This file provides information about main webhook requests gathering classes and methods.
+
+By default, it consists of following:
+
+1. Logging establishment
+
+2. FastApi app instance and router instance establishment
+
+3. Class :class:`server.HooksAcceptor` with methods :meth:`server.HooksAcceptor.accept_hook` and :meth:`server.HooksAcceptor.stats`
+
+4. Endpoint creation and attaching class methods to them in the router instance
+
+5. Adding router instance to app instance
+
+6. Server start in `if __name__ == '__main__.py'`
+
+
+Logger writes `logger.Info` data in ../logs/app.log as well as both stdout/stderr.
+
+Method :meth:`server.HooksAcceptor.accept_hook` processes incoming POST-requests from a webhook doing it as follows:
+
+1. Accepts request as an argument, which is assumed to be a gzip-compressed JSON
+
+2. Decompresses it
+
+3. Creates a list of :class:`models.Spread` models out of decompressed gzip request payload
+
+4. Creates instance of a model :class:`models.Headers` using received request headers
+
+5. If steps 3 and 4 don't encounter any errors - creates a return payload
+
+6. If not - generates 'bad' response payload with 500 status code
+
+7. Creates and adds to self.hooks a :class:`models.HookRecord` model instance using hook token from :class:`models.Headers` as a key
+
+
+Method :meth:`server.HooksAcceptor.stats` provides info about all received requests that are currently stored in cache. grouped by a hook_token doing it as follows:
+
+1. If correct hook token is passed in `hook_token` argument - returns all received spread batches for exactly this hook token
+
+2. If hook_token is empty - returns all cache
+
+
+More on examples of usage can be seen below.
+"""
+
 import asyncio
 import datetime
 import logging
@@ -20,23 +67,23 @@ SERVER_IP = os.getenv('SERVER_IP')
 SERVER_PORT = os.getenv('SERVER_PORT', 8000)
 LOGGING_LEVEL = os.getenv('LOGGING_LEVEL', 'INFO')
 
-os.makedirs("../logs", exist_ok=True)
+os.makedirs('../logs', exist_ok=True)
 
 logger = logging.getLogger()
 logger.setLevel('INFO')
 
 formatter = logging.Formatter(
-    "%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S %Z"
+    '%(asctime)s | %(levelname)s | %(name)s | %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S %Z'
 )
 
 # This handler will save app logs directly in file in project folder
 file_handler = TimedRotatingFileHandler(
-    "../logs/app.log",
-    when="D",
+    '../logs/app.log',
+    when='D',
     interval=1,
     backupCount=7,
-    encoding="utf-8"
+    encoding='utf-8'
 )
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
@@ -47,7 +94,7 @@ console_handler.setLevel(logging.DEBUG)
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
-for uvicorn_logger_name in ("uvicorn", "uvicorn.access", "uvicorn.error"):
+for uvicorn_logger_name in ('uvicorn', 'uvicorn.access', 'uvicorn.error'):
     uv_logger = logging.getLogger(uvicorn_logger_name)
     uv_logger.handlers = []
     uv_logger.addHandler(file_handler)
@@ -60,44 +107,52 @@ router = APIRouter()
 class HooksAcceptor:
     """
     Class representing hooks requests receiving and management.
-    Consists of accept_hook, which will process incoming POST-requests and process it, and stats method, which returns saved spread batches, depending on whether hook_token is passed or not.
+    Consists of accept_hook, which will process incoming POST-requests and process it,
+    and stats method, which returns saved spread batches, depending on whether hook_token is passed or not.
 
     You can also add your own methods in this class directly, just don't forget to add them to router.
 
     You can also add your own endpoints in three ways:
-    1.) add new class methods directly in this class
-    2.) create your own class
-    3.) create static functions
+
+    1. Add new class methods directly in this class
+
+    2. Create your own class
+
+    3. Create static functions
+
 
     First two ways can be realized using following code:
 
-    app = FastAPI()
-    router = APIRouter()
+    .. code-block:: python
 
-    router = ApiRouter() # a router instance
+        app = FastAPI()
+        router = APIRouter()
 
-    class SomeClass:
-        async def some_method(self, param: str = None):
-            pass
+        router = ApiRouter() # a router instance
 
-    handler = SomeClass()
+        class SomeClass:
+            async def some_method(self, param: str = None):
+                pass
 
-    router.post("/some_endpoint")(handler.some_method)
-    router.get("/some_endpoint/some_param")(handler.some_method)
+        handler = SomeClass()
 
-    app.include_router(router)
+        router.post('/some_endpoint')(handler.some_method)
+        router.get('/some_endpoint/some_param')(handler.some_method)
+
+        app.include_router(router)
 
     Third way can be realized a bit differently:
 
-    app = FastAPI()
-    router = APIRouter()
+    .. code-block:: python
 
-    @router.get("/some_endpoint", tags=["some_tag"])
-    async def some_method():
-        return [{"username": "Rick"}, {"username": "Morty"}]
+        app = FastAPI()
+        router = APIRouter()
 
-    app.include_router(router)
+        @router.get('/some_endpoint', tags=['some_tag'])
+        async def some_method():
+            return [{'username': 'Rick'}, {'username': 'Morty'}]
 
+        app.include_router(router)
     """
 
     def __init__(
@@ -127,7 +182,7 @@ class HooksAcceptor:
         logger.info('Received hook')
 
         receive_date = int(time.time()*1000)
-        receive_date_str = datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
+        receive_date_str = datetime.datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S %Z')
 
         body = await request.body()
 
@@ -159,8 +214,8 @@ class HooksAcceptor:
 
         finally:
             response_body = {
-                "success": success,
-                "status_code": status_code
+                'success': success,
+                'status_code': status_code
             }
 
         hook_token = request.headers.get('x-hooktoken')
@@ -209,8 +264,8 @@ class HooksAcceptor:
         :rtype: fastapi.responses.JSONResponse
         """
         response_body = {
-            "result_status": "success",
-            "data": {}
+            'result_status': 'success',
+            'data': {}
         }
 
         # If hook_token is specified - only that hook spread batches will be shown in response
@@ -245,11 +300,11 @@ class HooksAcceptor:
 
 
 handler = HooksAcceptor()
-router.post("/hook")(handler.accept_hook)
-router.get("/stats")(handler.stats)
-router.get("/stats/{hook_token}")(handler.stats)
+router.post('/hook')(handler.accept_hook)
+router.get('/stats')(handler.stats)
+router.get('/stats/{hook_token}')(handler.stats)
 
 app.include_router(router)
 
 if __name__ == '__main__':
-    uvicorn.run("server:app", host=SERVER_IP, port=int(SERVER_PORT), reload=False)
+    uvicorn.run('server:app', host=SERVER_IP, port=int(SERVER_PORT), reload=False)

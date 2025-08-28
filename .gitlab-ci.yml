@@ -1,0 +1,23 @@
+stages:
+  - docs
+
+build_docs:
+  tags:
+    - pages_builder
+  stage: docs
+  image: python:3.12
+  script:
+    - mkdir -p docs/source/_static
+    - python3 -m ensurepip --default-pip
+    - python3 -m pip install --user -r requirements.txt
+    - python3 -m pip install --user sphinx sphinx_rtd_theme sphinx-autodoc-typehints
+    - cd docs
+    - python3 -m sphinx -b html -c source source build/html
+    - cd ..
+    - rm -rf public/*
+    - cp -r docs/build/html public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
