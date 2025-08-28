@@ -1,5 +1,7 @@
 pages:
   stage: deploy
+  tags:
+    - documentation_builder
   script:
     - pip install sphinx sphinx_rtd_theme sphinx-autodoc-typehints
     - cd docs
