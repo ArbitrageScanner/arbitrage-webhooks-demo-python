@@ -11,7 +11,7 @@ build_docs:
     - python3 -m pip install --upgrade pip --user
     - python3 -m pip install --user fastapi pydantic sphinx sphinx_rtd_theme sphinx-autodoc-typehints
     - cd docs
-    - python3 -m sphinx -b html . build/html
+    - python3 -m sphinx -b html -c source source build/html
     - cd ..
     - rm -rf public/*
     - cp -r docs/build/html public/
