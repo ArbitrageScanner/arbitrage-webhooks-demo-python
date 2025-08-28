@@ -2,6 +2,7 @@ stages:
   - docs
 
 build_docs:
+  tags: pages_builder
   stage: docs
   image: python:3.12
   script:
