@@ -10,4 +10,4 @@ COPY . .
 ENV SERVER_IP=${SERVER_IP}
 ENV SERVER_PORT=${SERVER_PORT}
 
-CMD ["sh", "-c", "uvicorn server:app --host $SERVER_IP --port $SERVER_PORT --reload"]
+CMD ["sh", "-c", "uvicorn src.server:app --host $SERVER_IP --port $SERVER_PORT --reload"]
